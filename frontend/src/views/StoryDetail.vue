@@ -72,14 +72,14 @@
               :key="entry.id"
               :class="['bubble-row', idx % 2 === 0 ? 'left' : 'right']"
             >
-              <router-link :to="`/author/${entry.author}`" class="avatar-link">
+              <router-link :to="{ name: 'author', query: { name: entry.author } }" class="avatar-link">
                 <div class="avatar" :style="{ background: avatarColor(entry.author) }">
                   {{ entry.author.slice(0, 1) }}
                 </div>
               </router-link>
               <div class="bubble-wrapper">
                 <div class="bubble-meta">
-                  <router-link :to="`/author/${entry.author}`" class="bubble-author-link">
+                  <router-link :to="{ name: 'author', query: { name: entry.author } }" class="bubble-author-link">
                     <span class="bubble-author">{{ entry.author }}</span>
                   </router-link>
                   <span class="bubble-order">第 {{ entry.order }} 棒</span>

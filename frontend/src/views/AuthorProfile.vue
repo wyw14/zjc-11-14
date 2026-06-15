@@ -135,9 +135,15 @@ const avatarColor = computed(() => {
 })
 
 async function loadProfile() {
+  const authorName = route.query.name
+  if (!authorName) {
+    profile.value = null
+    loading.value = false
+    return
+  }
   loading.value = true
   try {
-    profile.value = await api.getAuthor(route.params.name)
+    profile.value = await api.getAuthor(authorName)
   } catch (e) {
     console.error(e)
     profile.value = null
@@ -146,7 +152,7 @@ async function loadProfile() {
   }
 }
 
-watch(() => route.params.name, loadProfile)
+watch(() => route.query.name, loadProfile)
 onMounted(loadProfile)
 </script>
 

@@ -44,7 +44,7 @@
           <router-link
             v-for="(author, index) in authors"
             :key="author.name"
-            :to="`/author/${author.name}`"
+            :to="{ name: 'author', query: { name: author.name } }"
             class="author-card"
           >
             <div class="author-rank" :class="getRankClass(index)">

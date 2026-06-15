@@ -37,6 +37,25 @@
       "participantCount": 1,
       "locked": false,
       "lockedReason": null
+    },
+    "mqeq783bgx4vqw": {
+      "id": "mqeq783bgx4vqw",
+      "title": "特殊字符测试",
+      "createdAt": 1781498484407,
+      "updatedAt": 1781498484407,
+      "entries": [
+        {
+          "id": "mqeq783bi29m9r",
+          "author": "A/B#C",
+          "content": "这是一个测试段落",
+          "order": 1,
+          "createdAt": 1781498484407
+        }
+      ],
+      "totalChars": 8,
+      "participantCount": 1,
+      "locked": false,
+      "lockedReason": null
     }
   }
 }

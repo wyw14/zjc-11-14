@@ -15,7 +15,7 @@ const router = createRouter({
     { path: '/story/:id', name: 'story', component: StoryDetail, props: true },
     { path: '/admin', name: 'admin', component: AdminPanel },
     { path: '/authors', name: 'authors', component: AuthorList },
-    { path: '/author/:name', name: 'author', component: AuthorProfile, props: true }
+    { path: '/author', name: 'author', component: AuthorProfile }
   ]
 })
 
