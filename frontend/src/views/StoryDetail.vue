@@ -72,12 +72,16 @@
               :key="entry.id"
               :class="['bubble-row', idx % 2 === 0 ? 'left' : 'right']"
             >
-              <div class="avatar" :style="{ background: avatarColor(entry.author) }">
-                {{ entry.author.slice(0, 1) }}
-              </div>
+              <router-link :to="`/author/${entry.author}`" class="avatar-link">
+                <div class="avatar" :style="{ background: avatarColor(entry.author) }">
+                  {{ entry.author.slice(0, 1) }}
+                </div>
+              </router-link>
               <div class="bubble-wrapper">
                 <div class="bubble-meta">
-                  <span class="bubble-author">{{ entry.author }}</span>
+                  <router-link :to="`/author/${entry.author}`" class="bubble-author-link">
+                    <span class="bubble-author">{{ entry.author }}</span>
+                  </router-link>
                   <span class="bubble-order">第 {{ entry.order }} 棒</span>
                   <span class="bubble-time">{{ formatTime(entry.createdAt) }}</span>
                 </div>
@@ -417,9 +421,27 @@ onMounted(loadStory)
   color: var(--text-muted);
 }
 
+.avatar-link {
+  flex-shrink: 0;
+}
+
+.avatar-link:hover .avatar {
+  transform: scale(1.1);
+}
+
+.bubble-author-link:hover .bubble-author {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 .bubble-author {
   font-weight: 600;
   color: var(--text);
+  transition: color 0.2s;
+}
+
+.avatar {
+  transition: transform 0.2s;
 }
 
 .bubble-order {

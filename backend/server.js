@@ -6,6 +6,8 @@ import {
   getStoryById,
   addEntry,
   resetStory,
+  getAllAuthors,
+  getAuthorProfile,
   MAX_PARTICIPANTS,
   MAX_CHARS_PER_STORY
 } from './storage.js';
@@ -108,6 +110,29 @@ app.post('/api/admin/stories/:id/reset', (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: '重置故事失败' });
+  }
+});
+
+app.get('/api/authors', (_req, res) => {
+  try {
+    const authors = getAllAuthors();
+    res.json(authors);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '获取作者列表失败' });
+  }
+});
+
+app.get('/api/authors/:name', (req, res) => {
+  try {
+    const profile = getAuthorProfile(decodeURIComponent(req.params.name));
+    if (!profile) {
+      return res.status(404).json({ error: '作者不存在' });
+    }
+    res.json(profile);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '获取作者信息失败' });
   }
 });
 

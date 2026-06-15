@@ -181,4 +181,98 @@ export function resetStory(storyId) {
   return { success: true, story: formatStoryDetail(story) };
 }
 
+export function getAllAuthors() {
+  const data = readData();
+  const authorMap = new Map();
+
+  for (const story of Object.values(data.stories)) {
+    for (const entry of story.entries) {
+      const author = entry.author;
+      if (!authorMap.has(author)) {
+        authorMap.set(author, {
+          name: author,
+          storyCount: 0,
+          entryCount: 0,
+          totalChars: 0,
+          firstActiveAt: entry.createdAt,
+          lastActiveAt: entry.createdAt,
+          stories: new Set()
+        });
+      }
+      const profile = authorMap.get(author);
+      profile.entryCount++;
+      profile.totalChars += entry.content?.length || 0;
+      profile.stories.add(story.id);
+      profile.storyCount = profile.stories.size;
+      if (entry.createdAt < profile.firstActiveAt) {
+        profile.firstActiveAt = entry.createdAt;
+      }
+      if (entry.createdAt > profile.lastActiveAt) {
+        profile.lastActiveAt = entry.createdAt;
+      }
+    }
+  }
+
+  return Array.from(authorMap.values())
+    .map(({ stories, ...rest }) => ({ ...rest, storyIds: Array.from(stories) }))
+    .sort((a, b) => b.totalChars - a.totalChars);
+}
+
+export function getAuthorProfile(authorName) {
+  const data = readData();
+  const authorNameLower = authorName.trim();
+  const profile = {
+    name: authorNameLower,
+    storyCount: 0,
+    entryCount: 0,
+    totalChars: 0,
+    firstActiveAt: null,
+    lastActiveAt: null,
+    stories: []
+  };
+
+  const storyMap = new Map();
+
+  for (const story of Object.values(data.stories)) {
+    const authorEntries = story.entries.filter(e => e.author === authorNameLower);
+    if (authorEntries.length > 0) {
+      const storyChars = authorEntries.reduce((sum, e) => sum + (e.content?.length || 0), 0);
+      profile.entryCount += authorEntries.length;
+      profile.totalChars += storyChars;
+
+      const storyInfo = {
+        id: story.id,
+        title: story.title,
+        entryCount: authorEntries.length,
+        totalChars: storyChars,
+        locked: story.locked,
+        firstEntryAt: Math.min(...authorEntries.map(e => e.createdAt)),
+        lastEntryAt: Math.max(...authorEntries.map(e => e.createdAt)),
+        entries: authorEntries.map(e => ({
+          id: e.id,
+          content: e.content,
+          order: e.order,
+          createdAt: e.createdAt,
+          contentLength: e.content?.length || 0
+        }))
+      };
+      storyMap.set(story.id, storyInfo);
+
+      for (const entry of authorEntries) {
+        if (!profile.firstActiveAt || entry.createdAt < profile.firstActiveAt) {
+          profile.firstActiveAt = entry.createdAt;
+        }
+        if (!profile.lastActiveAt || entry.createdAt > profile.lastActiveAt) {
+          profile.lastActiveAt = entry.createdAt;
+        }
+      }
+    }
+  }
+
+  profile.storyCount = storyMap.size;
+  profile.stories = Array.from(storyMap.values()).sort((a, b) => b.lastEntryAt - a.lastEntryAt);
+
+  return profile.storyCount > 0 ? profile : null;
+}
+
 export { MAX_PARTICIPANTS, MAX_CHARS_PER_STORY };

@@ -8,6 +8,7 @@
         </router-link>
         <nav class="nav">
           <router-link to="/" class="nav-link" exact-active-class="active">故事广场</router-link>
+          <router-link to="/authors" class="nav-link" active-class="active">作者广场</router-link>
           <router-link to="/admin" class="nav-link" active-class="active">管理中心</router-link>
         </nav>
       </div>
